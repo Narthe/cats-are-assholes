@@ -7,6 +7,7 @@ public class Touch : MonoBehaviour
     public float speed = 0.1F;
     public Text counterStr;
     private bool left = false;
+    public Transform furball;
     Rect LeftBounds = new Rect(0, 0, Screen.width / 2, Screen.height);
 
     void OnGui()
@@ -30,6 +31,7 @@ public class Touch : MonoBehaviour
                 {
                     int counter = int.Parse(counterStr.text);
                     counter++;
+                    furball.localScale += new Vector3(0.1F, 0.1F, 0.1F);
                     counterStr.text = counter.ToString();
                     left = !left;
                 }
@@ -41,6 +43,7 @@ public class Touch : MonoBehaviour
                 {
                     int counter = int.Parse(counterStr.text);
                     counter++;
+                    furball.localScale += new Vector3(0.1F, 0.1F, 0.1F);
                     counterStr.text = counter.ToString();
                     left = !left;
                 }
