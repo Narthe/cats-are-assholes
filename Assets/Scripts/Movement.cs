@@ -3,8 +3,9 @@ using System.Collections;
 
 public class Movement : MonoBehaviour
 {
-    public float speed = 1f;
-    
+    private float _speed = 1f;
+
+    private float _distance = 0f;
     private bool _isMoving = false;
     private Vector3 _targetDirection = Vector3.zero;
 
@@ -16,16 +17,13 @@ public class Movement : MonoBehaviour
 	void Update ()
     {
         if (_isMoving)
-        {
             Move();
-        }
-            
     }
 
     private void Move()
     {
-        Vector2 movement = transform.up  * speed * Time.deltaTime;
-        transform.position += _targetDirection * speed * Time.deltaTime;
+        Vector2 movement = transform.up  * _speed * Time.deltaTime;
+        transform.position += _targetDirection * _speed * Time.deltaTime;
     }
 
     //Setter
@@ -38,5 +36,9 @@ public class Movement : MonoBehaviour
     {
         _targetDirection = target;
     }
-    
+
+    public void SetSpeed(float distance)
+    {
+        _speed = distance / 100;
+    }
 }

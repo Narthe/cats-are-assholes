@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _startPosition;
     private Vector2 _endPosition;
     private Vector3 _swipeDirectionWorld = Vector2.zero;
+    private float _distanceSwipe = 0f;
 
     void OnGui()
     {
@@ -99,6 +100,7 @@ public class PlayerController : MonoBehaviour
                 m_endWorldPoint = Camera.main.ScreenToWorldPoint(_endPosition);
                 
                 _swipeDirectionWorld = m_endWorldPoint - m_startWorldPoint;
+                _distanceSwipe = Vector2.Distance(m_startWorldPoint, m_endWorldPoint);
                 return true;
             }
         }
