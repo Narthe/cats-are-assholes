@@ -38,9 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 2600477983
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: sprites
-    uniqueID: 2600477983
+  - name: front
+    uniqueID: 1834889131
     locked: 0

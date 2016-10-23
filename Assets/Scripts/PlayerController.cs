@@ -3,19 +3,19 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections;
 
-public class GameController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public float speed = 0.1F;
     public Text counterStr;
     private bool left = false;
-    public Transform furball;
+    public Transform currentFurball;
     Rect LeftBounds = new Rect(0, 0, Screen.width / 2, Screen.height);
 
     //Swipe Gesture parameters
     public float MinSwipeInputLenght = 1f;
     private Vector2 _startPosition;
     private Vector2 _endPosition;
-    private Vector2 _swipeDirectionWorld = Vector2.zero;
+    private Vector3 _swipeDirectionWorld = Vector2.zero;
 
     void OnGui()
     {
@@ -28,7 +28,11 @@ public class GameController : MonoBehaviour
     {
         foreach(Touch touch in Input.touches)
         {
-            if (IsSwipping(touch)) { Debug.Log("je swipe"); }
+            if (IsSwipping(touch))
+            {
+                currentFurball.GetComponent<Movement>().SetDirection(_swipeDirectionWorld);
+                currentFurball.GetComponent<Movement>().SetMoving(true);
+            }
             else
             {
                 if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
@@ -42,7 +46,7 @@ public class GameController : MonoBehaviour
                         {
                             int counter = int.Parse(counterStr.text);
                             counter++;
-                            furball.localScale += new Vector3(0.1F, 0.1F, 0.1F);
+                            currentFurball.localScale += new Vector3(0.1F, 0.1F, 0.1F);
                             counterStr.text = counter.ToString();
                             left = !left;
                         }
@@ -53,7 +57,7 @@ public class GameController : MonoBehaviour
                         {
                             int counter = int.Parse(counterStr.text);
                             counter++;
-                            furball.localScale += new Vector3(0.1F, 0.1F, 0.1F);
+                            currentFurball.localScale += new Vector3(0.1F, 0.1F, 0.1F);
                             counterStr.text = counter.ToString();
                             left = !left;
                         }
@@ -72,8 +76,6 @@ public class GameController : MonoBehaviour
     /// <returns>This Function returns boolean</returns>
     private bool IsSwipping(Touch touch)
     {
-        Ray m_ray;
-        RaycastHit m_hit;
         Vector2 m_startWorldPoint = Vector2.zero;
         Vector2 m_endWorldPoint = Vector2.zero;
 
@@ -82,11 +84,8 @@ public class GameController : MonoBehaviour
             _startPosition = touch.position;
             _endPosition = touch.position;
 
-            m_ray = Camera.main.ScreenPointToRay(_startPosition);
-
-            //Get the start position in the world coordinate system
-            if (Physics.Raycast(m_ray, out m_hit, 100))
-                m_startWorldPoint = m_hit.point;
+            m_startWorldPoint = Camera.main.ScreenToWorldPoint(_startPosition);
+            
         }
 
         if (touch.phase == TouchPhase.Moved)
@@ -94,17 +93,12 @@ public class GameController : MonoBehaviour
 
         if(touch.phase == TouchPhase.Ended)
         {
-            Debug.Log(Vector2.Distance(_startPosition, _endPosition) /10f);
             //Check if the swipe distance is ok 
             if(Vector2.Distance(_startPosition, _endPosition) / 10f > MinSwipeInputLenght)
             {
-                m_ray = Camera.main.ScreenPointToRay(_endPosition);
-                //Get the end position in the world coordinate system
-                if (Physics.Raycast(m_ray, out m_hit, 100))
-                    m_endWorldPoint = m_hit.point;
-
-                _swipeDirectionWorld = m_endWorldPoint - m_startWorldPoint;
+                m_endWorldPoint = Camera.main.ScreenToWorldPoint(_endPosition);
                 
+                _swipeDirectionWorld = m_endWorldPoint - m_startWorldPoint;
                 return true;
             }
         }
