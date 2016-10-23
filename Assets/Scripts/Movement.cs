@@ -4,41 +4,46 @@ using System.Collections;
 public class Movement : MonoBehaviour
 {
     private float _speed = 1f;
-
-    private float _distance = 0f;
     private bool _isMoving = false;
-    private Vector3 _targetDirection = Vector3.zero;
+    private Vector2 _targetDirection = Vector2.zero;
+    private float _scale = 0f;
 
 	void Start ()
     {
 	    
 	}
 	
-	void Update ()
+    void Update()
     {
-        if (_isMoving)
-            Move();
+        if(transform.localScale.x > _scale / 0.5 && _isMoving)
+            transform.localScale = new Vector3(transform.localScale.x - _speed * _scale / 3 * 7f * Time.deltaTime, transform.localScale.y - _speed * _scale / 3 * 7f * Time.deltaTime, transform.localScale.z);
     }
 
-    private void Move()
+	void FixedUpdate ()
     {
-        Vector2 movement = transform.up  * _speed * Time.deltaTime;
-        transform.position += _targetDirection * _speed * Time.deltaTime;
-    }
+        transform.GetComponent<Rigidbody2D>().AddForce(_targetDirection * _speed);
 
+        if (transform.localScale.x <= _scale / 0.5)
+        {
+            transform.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            transform.GetComponent<Rigidbody2D>().angularVelocity = 0f;
+            transform.GetComponent<Rigidbody2D>().isKinematic = true;
+            _isMoving = false;
+        }
+    }
+    
     //Setter
-    public void SetMoving(bool isMoving)
-    {
-        _isMoving = isMoving;
-    }
-
-    public void SetDirection(Vector3 target)
-    {
-        _targetDirection = target;
-    }
 
     public void SetSpeed(float distance)
     {
-        _speed = distance / 100;
+        _speed = distance / 10;
+    }
+
+    public void SetMovement(Vector2 target, float distance, float currentScale)
+    {
+        _isMoving = true;
+        _targetDirection = target;
+        _scale = currentScale;
+        SetSpeed(distance);
     }
 }

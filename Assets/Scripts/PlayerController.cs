@@ -31,8 +31,7 @@ public class PlayerController : MonoBehaviour
         {
             if (IsSwipping(touch))
             {
-                currentFurball.GetComponent<Movement>().SetDirection(_swipeDirectionWorld);
-                currentFurball.GetComponent<Movement>().SetMoving(true);
+                currentFurball.GetComponent<Movement>().SetMovement(_swipeDirectionWorld, _distanceSwipe, transform.localScale.x);
             }
             else
             {
